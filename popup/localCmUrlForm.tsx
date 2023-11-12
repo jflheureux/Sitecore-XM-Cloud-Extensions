@@ -44,9 +44,7 @@ const LocalCmUrlForm = () => {
 
     const result = await executeScriptInActiveTab({
       func: (localStorageKey, cmUrl) => {
-        var localXmCloudUrl = cmUrl
-        localStorage.getItem(localStorageKey)
-        localStorage.setItem(localStorageKey, localXmCloudUrl)
+        localStorage.setItem(localStorageKey, cmUrl)
         location.reload()
       },
       args: [LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY, cmUrlToSet]
@@ -73,8 +71,8 @@ const LocalCmUrlForm = () => {
 
     const result = await executeScriptInActiveTab({
       func: (localStorageKey) => {
-        var localStorageEntry = localStorage.getItem(localStorageKey)
-        if (localStorageEntry) {
+        var localStorageCmUrl = localStorage.getItem(localStorageKey)
+        if (localStorageCmUrl) {
           localStorage.removeItem(localStorageKey)
           location.reload()
           return true
@@ -111,9 +109,9 @@ const LocalCmUrlForm = () => {
   async function getCurrentLocalStorageValue() {
     const result = await executeScriptInActiveTab({
       func: (localStorageKey) => {
-        var localStorageEntry = localStorage.getItem(localStorageKey)
-        if (localStorageEntry) {
-          return localStorageEntry
+        var localStorageCmUrl = localStorage.getItem(localStorageKey)
+        if (localStorageCmUrl) {
+          return localStorageCmUrl
         }
         return ''
       },
