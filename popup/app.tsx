@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import sitecoreTheme, { toastOptions } from '@sitecore/blok-theme'
 import {
   Box,
@@ -33,9 +33,20 @@ const App = () => {
   const [initialized, setInitialized] = useState(false)
   const [activeTabIsXMCloudPages, setActiveTabIsXMCloudPages] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const popupHeight = useRef('');
 
   function isSupportedUrl(url) {
     return url?.startsWith('https://perdu.com')
+  }
+
+  function handleInfoButtonClick() {
+    popupHeight.current = 'md'
+    onOpen();
+  }
+
+  function handleInfoSectionClose() {
+    popupHeight.current = ''
+    onClose();
   }
 
   // Initialization - Called when the popup is open
@@ -60,7 +71,7 @@ const App = () => {
 
   return (
     <ChakraProvider theme={sitecoreTheme} toastOptions={toastOptions}>
-      <Box width='md'>
+      <Box width='md' height={popupHeight.current}>
         <Box bg='white' shadow='base' overflow='visible' height='14' padding='3' zIndex='3'>
           <Flex>
             <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/740b04f7a7ca404e96d69319fb98f6b0' alt='Sitecore XM Cloud Logo' />
@@ -70,14 +81,14 @@ const App = () => {
               icon={<Icon><path d={mdiInformationOutline} /></Icon>}
               variant='ghost'
               aria-label={''}
-              onClick={onOpen}
+              onClick={handleInfoButtonClick}
             />
           </Flex>
         </Box>
 
         {initialized && content}
 
-        <Drawer onClose={onClose} isOpen={isOpen} size='sm'>
+        <Drawer onClose={handleInfoSectionClose} isOpen={isOpen} size='sm'>
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
