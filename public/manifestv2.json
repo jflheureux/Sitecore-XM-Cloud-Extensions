@@ -15,7 +15,10 @@
     "default_title": "Open the popup",
     "default_icon": "icon-72x72.png"
   },
-  "permissions": [],
+  "permissions": [
+    "scripting",
+    "*://*/*"
+  ],
   "icons": {
     "72": "icon-72x72.png",
     "96": "icon-96x96.png",

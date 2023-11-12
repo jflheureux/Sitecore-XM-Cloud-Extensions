@@ -18,7 +18,12 @@
       "strict_min_version": "100.0"
     }
   },
-  "permissions": [],
+  "permissions": [
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
   "icons": {
     "72": "icon-72x72.png",
     "96": "icon-96x96.png",
