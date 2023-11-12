@@ -1,5 +1,6 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import browser from 'webextension-polyfill'
+import UnsupportedUrl from './unsupportedUrl'
 
 const LOCAL_STORAGE_KEY = 'Sitecore.Pages.LocalXmCloudUrl'
 
@@ -15,14 +16,12 @@ export default () => {
     return tab
   }
 
-  async function executeScriptInActiveTab({ func, args }: { func: (...args: any[]) => string, args: any[] }) {
+  async function executeScriptInActiveTab({ func, args }: { func: (...args: any[]) => any, args: any[] }) {
     try {
       const tab = await getActiveBrowserTab()
 
       if (!tab?.id) {
-        setMessage('No active tab found')
-        setLoading(false)
-        return
+        return { error: 'No active tab found' }
       }
 
       // Execute script in the current tab
@@ -34,8 +33,7 @@ export default () => {
 
       return scriptExecutionResults[0].result
     } catch (error: any) {
-      alert(error)
-      setMessage(error)
+      return { error }
     }
   }
 
@@ -56,12 +54,17 @@ export default () => {
         localStorage.getItem(localStorageKey)
         localStorage.setItem(localStorageKey, localXmCloudUrl)
         location.reload()
-        return 'Local CM Set!'
       },
       args: [LOCAL_STORAGE_KEY, cmUrlToSet]
     })
 
-    setMessage(result.message)
+    if (result?.error) {
+      setLoading(false)
+      alert(result.error)
+      return
+    }
+
+    setMessage('Local CM Set!')
     setLoading(false)
   }
 
@@ -74,14 +77,25 @@ export default () => {
         if (localStorageEntry) {
           localStorage.removeItem(localStorageKey)
           location.reload()
-          return 'Local CM Cleared!'
+          return true
         }
-        return 'Nothing to clear'
+        return false
       },
       args: [LOCAL_STORAGE_KEY]
     })
 
-    setMessage(result.message)
+    if (result?.error) {
+      setLoading(false)
+      alert(result.error)
+      return
+    }
+
+    if (result) {
+      setMessage('Local CM Cleared!')
+    } else {
+      setMessage('Nothing to clear')
+    }
+
     setLoading(false)
   }
 
@@ -97,7 +111,13 @@ export default () => {
       args: [LOCAL_STORAGE_KEY]
     })
 
-    return result.message;
+    if (result?.error) {
+      setLoading(false)
+      alert(result.error)
+      return null
+    }
+
+    return result;
   }
 
   function isSupportedUrl(url) {
@@ -121,7 +141,7 @@ export default () => {
         return getCurrentLocalStorageValue();
       }).then((currentLocalStorageValue: string) => {
         if (!currentLocalStorageValue) {
-          // Happens if there is no tab, no tab ID, or the tab URL is unsupported by the extension
+          // Happens if there is no tab, no tab ID, the tab URL is unsupported by the extension, or an error occured while getting the local storage value
           return
         }
         if (!cmUrlInput.current) {
@@ -134,11 +154,7 @@ export default () => {
   }, [initialized])
 
   if (!activeTabIsXMCloudPages) {
-    return (
-      <div className='flex flex-col gap-4 p-4 shadow-sm bg-gradient-to-r from-purple-500 to-pink-500 w-96'>
-        <p className='text-white'>The active tab is not Sitecore XM Cloud Pages.</p>
-      </div>
-    )
+    return <UnsupportedUrl />
   }
 
   return (
