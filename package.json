@@ -75,6 +75,13 @@
     "webextension-polyfill": "^0.10.0"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@icons-pack/react-simple-icons": "^9.1.0",
+    "@mdi/js": "^7.3.67",
+    "@sitecore/blok-theme": "^1.1.8",
+    "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

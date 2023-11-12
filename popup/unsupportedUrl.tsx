@@ -1,7 +1,11 @@
+import { Alert, AlertDescription, AlertIcon, Stack } from '@chakra-ui/react'
 import React from 'react'
 
 export default () => (
-  <div className='flex flex-col gap-4 p-4 shadow-sm bg-gradient-to-r from-purple-500 to-pink-500 w-96'>
-    <p className='text-white'>The active tab is not Sitecore XM Cloud Pages.</p>
-  </div>
+  <Stack spacing='6' padding='6'>
+    <Alert status='info'>
+      <AlertIcon />
+      <AlertDescription w='full'>This extension is only enabled on Sitecore XM Cloud Pages.</AlertDescription>
+    </Alert>
+  </Stack>
 )
