@@ -27,7 +27,6 @@
     "compile:tsc": "tsc",
     "compile:vite": "run-p compile:vite:*",
     "compile:vite:web": "vite build",
-    "compile:vite:js": "vite build --config vite.content.config.ts",
     "preview": "vite preview",
     "start": "run-s start:chrome",
     "start:chrome": "run-p start:chrome:*",
@@ -46,7 +45,6 @@
     "watch:chrome": "run-p watch:all:* watch:chrome:script",
     "watch:firefox": "run-p watch:chrome:*",
     "watch:all:web": "npm run compile:vite:web -- --watch",
-    "watch:all:js": "npm run compile:vite:js -- --watch",
     "watch:chrome:script": "timeout /t 1 && npm run build:chrome:script -- --watch"
   },
   "devDependencies": {
