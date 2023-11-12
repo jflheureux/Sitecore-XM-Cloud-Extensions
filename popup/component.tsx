@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import browser from 'webextension-polyfill'
 
 const LOCAL_STORAGE_KEY = "Sitecore.Pages.LocalXmCloudUrl"
@@ -6,12 +6,18 @@ const LOCAL_STORAGE_KEY = "Sitecore.Pages.LocalXmCloudUrl"
 export default () => {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [activeTabIsXMCloudPages, setActiveTabIsXMCloudPages] = useState(false)
+
+  async function getActiveBrowserTab() {
+    let [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+    return tab
+  }
 
   async function executeScriptInActiveTab(func: (...args: any[]) => { message: string }, args: any[]) {
     setLoading(true)
 
     try {
-      let [tab] = await browser.tabs.query({ active: true, currentWindow: true })
+      const tab = await getActiveBrowserTab()
 
       if (!tab?.id) {
         setMessage('No active tab found')
@@ -62,6 +68,25 @@ export default () => {
         return { message: 'Nothing to clear' }
       },
       [LOCAL_STORAGE_KEY]
+    )
+  }
+
+  useEffect(() => {
+    getActiveBrowserTab().then((tab) => {
+      if (!tab?.id) {
+        return
+      }
+      if (tab.url?.startsWith('https://perdu.com')) {
+        setActiveTabIsXMCloudPages(true);
+      }
+    })
+  })
+
+  if (!activeTabIsXMCloudPages) {
+    return (
+      <div className='flex flex-col gap-4 p-4 shadow-sm bg-gradient-to-r from-purple-500 to-pink-500 w-96'>
+        <p className='text-white'>The active tab is not Sitecore XM Cloud Pages.</p>
+      </div>
     )
   }
 

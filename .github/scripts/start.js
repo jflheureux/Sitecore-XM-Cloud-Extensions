@@ -32,7 +32,7 @@ async function startBrowser (browserName) {
     await browser.installAddOn(extension.toString('base64'), true)
   }
 
-  await browser.url('https://github.com/stateful/web-extension-starter-kit')
+  await browser.url('https://perdu.com')
 }
 
 const browserName = process.argv.slice(2).pop() || 'chrome'

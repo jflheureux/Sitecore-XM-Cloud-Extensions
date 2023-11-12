@@ -22,7 +22,7 @@
     "scripting"
   ],
   "host_permissions": [
-    "*://*/*"
+    "https://perdu.com/*"
   ],
   "icons": {
     "72": "icon-72x72.png",
