@@ -1,41 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
-import browser from 'webextension-polyfill'
 import UnsupportedUrl from './unsupportedUrl'
+import { executeScriptInActiveTab, getActiveBrowserTab } from './browserUtils'
+import { LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY } from './consts'
 
-const LOCAL_STORAGE_KEY = 'Sitecore.Pages.LocalXmCloudUrl'
-
-export default () => {
+const App = () => {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [initialized, setInitialized] = useState(false)
   const [activeTabIsXMCloudPages, setActiveTabIsXMCloudPages] = useState(false)
   const cmUrlInput = useRef<HTMLInputElement>(null)
-
-  async function getActiveBrowserTab() {
-    let [tab] = await browser.tabs.query({ active: true, currentWindow: true })
-    return tab
-  }
-
-  async function executeScriptInActiveTab({ func, args }: { func: (...args: any[]) => any, args: any[] }) {
-    try {
-      const tab = await getActiveBrowserTab()
-
-      if (!tab?.id) {
-        return { error: 'No active tab found' }
-      }
-
-      // Execute script in the current tab
-      const scriptExecutionResults = await browser.scripting.executeScript({
-        target: { tabId: tab.id },
-        func,
-        args
-      })
-
-      return scriptExecutionResults[0].result
-    } catch (error: any) {
-      return { error }
-    }
-  }
 
   async function setLocalCmUrl() {
     setLoading(true)
@@ -55,7 +28,7 @@ export default () => {
         localStorage.setItem(localStorageKey, localXmCloudUrl)
         location.reload()
       },
-      args: [LOCAL_STORAGE_KEY, cmUrlToSet]
+      args: [LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY, cmUrlToSet]
     })
 
     if (result?.error) {
@@ -81,7 +54,7 @@ export default () => {
         }
         return false
       },
-      args: [LOCAL_STORAGE_KEY]
+      args: [LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY]
     })
 
     if (result?.error) {
@@ -108,7 +81,7 @@ export default () => {
         }
         return ''
       },
-      args: [LOCAL_STORAGE_KEY]
+      args: [LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY]
     })
 
     if (result?.error) {
@@ -173,3 +146,5 @@ export default () => {
     </div>
   )
 }
+
+export default App
