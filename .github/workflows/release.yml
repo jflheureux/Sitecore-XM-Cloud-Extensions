@@ -28,7 +28,7 @@ jobs:
   release:
     strategy:
       fail-fast: false
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
         run: |
           git log $(git describe --tags --abbrev=0)..HEAD --oneline &> ${{ github.workspace }}-CHANGELOG.txt
           cat ${{ github.workspace }}-CHANGELOG.txt
-          rm ./*.zip ./*.crx
+          npm run cleanzipcrx
       - name: Release
         run: npx release-it ${{github.event.inputs.releaseType}} --no-npm --no-github.release --ci --npm.skipChecks --no-git.requireCleanWorkingDir
         env:
@@ -72,12 +72,12 @@ jobs:
           path: |
             ./*.crx
             ./*.zip
-      - name: Submit to Mozilla
-        working-directory: ./dist
-        run: npx web-ext-submit@7
-        env:
-          WEB_EXT_API_KEY: ${{ secrets.MOZILLA_WEB_EXT_API_KEY }}
-          WEB_EXT_API_SECRET: ${{ secrets.MOZILLA_WEB_EXT_API_SECRET }}
+      # - name: Submit to Mozilla
+      #   working-directory: ./dist
+      #   run: npx web-ext-submit@7
+      #   env:
+      #     WEB_EXT_API_KEY: ${{ secrets.MOZILLA_WEB_EXT_API_KEY }}
+      #     WEB_EXT_API_SECRET: ${{ secrets.MOZILLA_WEB_EXT_API_SECRET }}
       - name: Submit to Google
         working-directory: ./dist
         run: npx chrome-webstore-upload-cli@2 upload --auto-publish
