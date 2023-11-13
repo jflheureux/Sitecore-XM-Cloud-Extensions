@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 import {
   Alert,
   AlertDescription,
@@ -13,14 +13,18 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Icon,
   Image,
   Input,
+  Link,
   Spacer,
   Stack,
+  Text,
   Wrap,
 } from '@chakra-ui/react'
 import { executeScriptInActiveTab } from './browserUtils'
 import { LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY } from './consts'
+import { mdiCheckCircle, mdiCircle } from '@mdi/js'
 
 type Message = {
   description: string;
@@ -36,6 +40,8 @@ const disconnectedStatus: Status = {
   connected: false
 }
 
+const URL_VALIDATION_REGEXP = new RegExp('^http[s]?:\\/\\/[^\\.]+\\.[^.]+.*', 'i')
+
 const LocalCmUrlForm = () => {
   const [loading, setLoading] = useState(false)
   const [initialized, setInitialized] = useState(false)
@@ -44,18 +50,18 @@ const LocalCmUrlForm = () => {
   const [message, setMessage] = useState<Message | null>(null)
   const [cmUrlInputValue, setCmUrlInputValue] = useState<string | null>(null)
 
-  async function handleEditButtonClick() {
+  function handleEditButtonClick() {
     setIsEditing(true)
   }
 
-  async function handleCancelButtonClick() {
+  function handleCancelButtonClick() {
     setIsEditing(false)
   }
 
   async function handleConnectButtonClick() {
     setLoading(true)
 
-    const trimmedCmUrl = cmUrlInputValue?.trim();
+    let trimmedCmUrl = cmUrlInputValue?.trim();
 
     if (!trimmedCmUrl || trimmedCmUrl.length === 0) {
       setMessage({
@@ -64,6 +70,14 @@ const LocalCmUrlForm = () => {
       })
       setLoading(false)
       return
+    }
+
+    // Extract the right URL part to set in local storage
+    const indexOfThirdSlash = trimmedCmUrl.indexOf('/', 8)
+    if (indexOfThirdSlash > 0) {
+      trimmedCmUrl = trimmedCmUrl.slice(0, indexOfThirdSlash + 1)
+    } else {
+      trimmedCmUrl = trimmedCmUrl + '/'
     }
 
     const result = await executeScriptInActiveTab({
@@ -120,8 +134,26 @@ const LocalCmUrlForm = () => {
     setLoading(false)
   }
 
-  async function handleCmUrlInputChange(e: ChangeEvent<HTMLInputElement>) {
+  function handleCmUrlInputChange(e: ChangeEvent<HTMLInputElement>) {
     setCmUrlInputValue(e.target.value)
+  }
+
+  function handleEnterKeyPress<T = Element>(func: () => void) {
+    return handleKeyPress<T>(func, "Enter")
+  }
+
+  function handleKeyPress<T = Element>(func: () => void, key: string) {
+    return (e: KeyboardEvent<T>) => {
+      if (e.key === key) {
+        func()
+      }
+    }
+  }
+
+  function handleCmUrlInputEnterKeyPress() {
+    if (ValidateCmUrlInputValue()) {
+      handleConnectButtonClick()
+    }
   }
 
   async function getCurrentLocalStorageValue() {
@@ -152,6 +184,20 @@ const LocalCmUrlForm = () => {
     })
   }
 
+  function ValidateCmUrlInputValue() {
+    if (isCmUrlInputNull) {
+      return true
+     }
+
+     const trimmedCmUrl = cmUrlInputValue.trim();
+
+     if (trimmedCmUrl.length === 0) {
+      return false
+     }
+
+     return URL_VALIDATION_REGEXP.test(trimmedCmUrl)
+  }
+
   // Initialization - Called when the popup is open
   useEffect(() => {
     if (!initialized) {
@@ -178,20 +224,24 @@ const LocalCmUrlForm = () => {
     <Button isDisabled={loading} onClick={handleDisconnectButtonClick}>Disconnect</Button> :
     <Button isDisabled={loading} onClick={handleEditButtonClick}>Connect</Button>
 
-  const cmUrlInputIsNull = cmUrlInputValue === null
-  const cmUrlInputIsEmpty = cmUrlInputIsNull ? false : cmUrlInputValue.trim() === ''
+  const isCmUrlInputNull = cmUrlInputValue === null
+  const isCmUrlInputValid = ValidateCmUrlInputValue()
 
   const mainContent = isEditing ? (
     <>
-      <FormControl isRequired isInvalid={cmUrlInputIsEmpty}>
+      <FormControl isRequired isInvalid={!isCmUrlInputValid}>
         <FormLabel>Local CM URL</FormLabel>
-        <Input value={cmUrlInputValue || ''} onChange={handleCmUrlInputChange} />
+        <Input
+          value={cmUrlInputValue || ''}
+          onChange={handleCmUrlInputChange}
+          onKeyDown={handleEnterKeyPress(handleCmUrlInputEnterKeyPress)}
+        />
         <FormHelperText>
-          With trailing slash. e.g.: https://xmcloudcm.localhost/
+          E.g.: https://xmcloudcm.localhost/
         </FormHelperText>
         <FormErrorMessage>
           <FormErrorIcon />
-          Required
+          A valid URL is required
         </FormErrorMessage>
       </FormControl>
 
@@ -199,7 +249,7 @@ const LocalCmUrlForm = () => {
         <Spacer />
         <Wrap align='right'>
           <Button isDisabled={loading} onClick={handleCancelButtonClick} variant='outline'>Cancel</Button>
-          <Button isDisabled={loading || cmUrlInputIsNull || cmUrlInputIsEmpty} onClick={handleConnectButtonClick}>Connect</Button>
+          <Button isDisabled={loading || isCmUrlInputNull || !isCmUrlInputValid} onClick={handleConnectButtonClick}>Connect</Button>
         </Wrap>
       </Flex>
     </>
@@ -211,7 +261,16 @@ const LocalCmUrlForm = () => {
 
   return (
     <Stack spacing='2' padding='6'>
-      <Heading size='sm'>Connect <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/c0ebec446dd1414ab75e5bcdccafc3dc' alt='Sitecore XM Cloud Pages Logo' height='6' display='inline' />Pages to your local XM Cloud instance</Heading>
+      <Heading size='sm'>
+        Connect{' '}
+        <Image
+          src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/c0ebec446dd1414ab75e5bcdccafc3dc'
+          alt='Sitecore XM Cloud Pages Logo'
+          height='6'
+          display='inline'
+        />{' '}
+        Pages to your local XM Cloud instance
+      </Heading>
       <Stack spacing='6'>
         <Box>
           <Text display='inline' fontWeight='semibold'>Status: </Text>
