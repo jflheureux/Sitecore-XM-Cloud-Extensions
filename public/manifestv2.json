@@ -1,10 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "My Web Extension",
-  "author": "my@email.com",
-  "description": "A cross browser web extension.",
-  "homepage_url": "https://projectUrl.com",
-  "version": "0.0.0",
+  "name": "Sitecore XM Cloud Extensions",
+  "author": "sitecore_xm_cloud_extensions@outlook.com",
+  "description": "Browser extension that improves Sitecore XM Cloud user experience.",
+  "homepage_url": "https://github.com/jflheureux/Sitecore-XM-Cloud-Extensions",
+  "version": "1.0.0",
   "background": {
     "page": "./background/index.html",
     "persistent": false
@@ -12,7 +12,7 @@
   "browser_action": {
     "default_area": "navbar",
     "default_popup": "./popup/index.html",
-    "default_title": "Open the popup",
+    "default_title": "Open Sitecore XM Cloud Extensions",
     "default_icon": "icon-72x72.png"
   },
   "permissions": [

@@ -36,8 +36,8 @@ jobs:
           fetch-depth: 0
       - name: Setup Git
         run: |
-          git config --global user.name "stateful-wombot"
-          git config --global user.email "christian+github-bot@stateful.com"
+          git config --global user.name "jflheureux"
+          git config --global user.email "sitecore_xm_cloud_extensions@outlook.com"
       - name: Install
         run: npm ci
       - name: Bundle
