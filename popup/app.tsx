@@ -36,7 +36,13 @@ const App = () => {
   const popupHeight = useRef('');
 
   function isSupportedUrl(url) {
-    return url?.startsWith('https://perdu.com')
+    if (!url) {
+      return false
+    }
+
+    return url.startsWith('https://pages.sitecorecloud.io') ||
+           url.startsWith('https://pages.sitecore.io') ||
+           url.startsWith('https://symphony.sitecorecloud.io')
   }
 
   function handleInfoButtonClick() {

@@ -17,7 +17,9 @@
   },
   "permissions": [
     "scripting",
-    "https://perdu.com/*"
+    "https://pages.sitecorecloud.io/*",
+    "https://pages.sitecore.io/*",
+    "https://symphony.sitecorecloud.io/*"
   ],
   "icons": {
     "72": "icon-72x72.png",

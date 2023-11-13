@@ -32,7 +32,7 @@ async function startBrowser (browserName) {
     await browser.installAddOn(extension.toString('base64'), true)
   }
 
-  await browser.url('https://perdu.com')
+  await browser.url('https://pages.sitecorecloud.io')
 }
 
 const browserName = process.argv.slice(2).pop() || 'chrome'
