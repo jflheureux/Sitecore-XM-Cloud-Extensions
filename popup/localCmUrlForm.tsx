@@ -279,7 +279,8 @@ const LocalCmUrlForm = () => {
           alt='Sitecore XM Cloud Pages Logo'
           height='6'
           display='inline'
-        />{' '}
+          verticalAlign='middle'
+        />
         Pages to your Local XM Cloud Instance
       </Heading>
       <Stack spacing='6'>
