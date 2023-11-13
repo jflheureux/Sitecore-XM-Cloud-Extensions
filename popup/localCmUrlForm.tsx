@@ -1,14 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
   Button,
   CloseButton,
   Flex,
   FormControl,
+  FormErrorIcon,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
+  Heading,
+  Image,
   Input,
   Spacer,
   Stack,
@@ -22,20 +27,39 @@ type Message = {
   status: 'info' | 'success' | 'error';
 }
 
+type Status = {
+  connected: boolean;
+  cmUrl?: string;
+}
+
+const disconnectedStatus: Status = {
+  connected: false
+}
+
 const LocalCmUrlForm = () => {
   const [loading, setLoading] = useState(false)
   const [initialized, setInitialized] = useState(false)
+  const [status, setStatus] = useState(disconnectedStatus)
+  const [isEditing, setIsEditing] = useState(false)
   const [message, setMessage] = useState<Message | null>(null)
-  const cmUrlInput = useRef<HTMLInputElement>(null)
+  const [cmUrlInputValue, setCmUrlInputValue] = useState<string | null>(null)
 
-  async function setLocalCmUrl() {
+  async function handleEditButtonClick() {
+    setIsEditing(true)
+  }
+
+  async function handleCancelButtonClick() {
+    setIsEditing(false)
+  }
+
+  async function handleConnectButtonClick() {
     setLoading(true)
 
-    const cmUrlToSet = cmUrlInput.current?.value;
+    const trimmedCmUrl = cmUrlInputValue?.trim();
 
-    if (!cmUrlToSet) {
+    if (!trimmedCmUrl || trimmedCmUrl.length === 0) {
       setMessage({
-        description: 'Please enter a CM URL',
+        description: 'Please enter a non blank CM URL',
         status: 'error',
       })
       setLoading(false)
@@ -47,7 +71,7 @@ const LocalCmUrlForm = () => {
         localStorage.setItem(localStorageKey, cmUrl)
         location.reload()
       },
-      args: [LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY, cmUrlToSet]
+      args: [LOCAL_XM_CLOUD_URL_LOCAL_STORAGE_KEY, trimmedCmUrl]
     })
 
     if (result?.error) {
@@ -59,14 +83,12 @@ const LocalCmUrlForm = () => {
       return
     }
 
-    setMessage({
-      description: 'Local CM Set!',
-      status: 'success',
-    })
+    setConnectedStatus(trimmedCmUrl)
+    setIsEditing(false)
     setLoading(false)
   }
 
-  async function clearLocalCM() {
+  async function handleDisconnectButtonClick() {
     setLoading(true)
 
     const result = await executeScriptInActiveTab({
@@ -92,18 +114,14 @@ const LocalCmUrlForm = () => {
     }
 
     if (result) {
-      setMessage({
-        description: 'Local CM Cleared!',
-        status: 'success',
-      })
-    } else {
-      setMessage({
-        description: 'Nothing to clear',
-        status: 'info',
-      })
+      setStatus(disconnectedStatus)
     }
 
     setLoading(false)
+  }
+
+  async function handleCmUrlInputChange(e: ChangeEvent<HTMLInputElement>) {
+    setCmUrlInputValue(e.target.value)
   }
 
   async function getCurrentLocalStorageValue() {
@@ -127,6 +145,13 @@ const LocalCmUrlForm = () => {
     return result;
   }
 
+  function setConnectedStatus(cmUrl: string) {
+    setStatus({
+      connected: true,
+      cmUrl
+    })
+  }
+
   // Initialization - Called when the popup is open
   useEffect(() => {
     if (!initialized) {
@@ -135,40 +160,65 @@ const LocalCmUrlForm = () => {
         if (!currentLocalStorageValue) {
           return
         }
-        if (!cmUrlInput.current) {
-          return
-        }
 
-        cmUrlInput.current.value = currentLocalStorageValue
+        setConnectedStatus(currentLocalStorageValue)
       })
     }
   }, [initialized])
 
-  return (
-    <Stack spacing='6' padding='6'>
-      <FormControl>
+  const mainActionButton = status.connected ?
+    <Button isDisabled={loading} onClick={handleDisconnectButtonClick}>Disconnect</Button> :
+    <Button isDisabled={loading} onClick={handleEditButtonClick}>Connect</Button>
+
+  const cmUrlInputIsNull = cmUrlInputValue === null
+  const cmUrlInputIsEmpty = cmUrlInputIsNull ? false : cmUrlInputValue.trim() === ''
+
+  const content = isEditing ? (
+    <>
+      <FormControl isRequired isInvalid={cmUrlInputIsEmpty}>
         <FormLabel>Local CM URL</FormLabel>
-        <Input ref={cmUrlInput} />
+        <Input value={cmUrlInputValue || ''} onChange={handleCmUrlInputChange} />
         <FormHelperText>
           With trailing slash. e.g.: https://xmcloudcm.localhost/
         </FormHelperText>
+        <FormErrorMessage>
+          <FormErrorIcon />
+          Required
+        </FormErrorMessage>
       </FormControl>
 
       <Flex>
         <Spacer />
         <Wrap align='right'>
-          <Button disabled={loading} onClick={clearLocalCM} variant='outline'>Clear</Button>
-          <Button disabled={loading} onClick={setLocalCmUrl}>Set</Button>
+          <Button isDisabled={loading} onClick={handleCancelButtonClick} variant='outline'>Cancel</Button>
+          <Button isDisabled={loading || cmUrlInputIsNull || cmUrlInputIsEmpty} onClick={handleConnectButtonClick}>Connect</Button>
         </Wrap>
       </Flex>
+    </>
+  ) : (
+    <Wrap>
+      {mainActionButton}
+    </Wrap>
+  )
 
-      {!!message &&
-        <Alert status={message.status}>
-          <AlertIcon />
-          <AlertDescription w='full'>{message.description}</AlertDescription>
-          <CloseButton m="-1" onClick={() => setMessage(null)} />
-        </Alert>
-      }
+  return (
+    <Stack spacing='2' padding='6'>
+      <Heading size='sm'>Connect <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/c0ebec446dd1414ab75e5bcdccafc3dc' alt='Sitecore XM Cloud Pages Logo' height='6' display='inline' />Pages to your local XM Cloud instance</Heading>
+      <Stack spacing='6'>
+        <Box>
+          Status: { status.connected ? `Connected to ${status.cmUrl}` : 'Disconnected' }
+        </Box>
+
+        {content}
+
+        {!!message &&
+          <Alert status={message.status}>
+            <AlertIcon />
+            <AlertDescription w='full'>{message.description}</AlertDescription>
+            <CloseButton m="-1" onClick={() => setMessage(null)} />
+          </Alert>
+        }
+      </Stack>
     </Stack>
   )
 }
