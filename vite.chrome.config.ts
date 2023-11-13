@@ -23,7 +23,7 @@ export default defineConfig({
     lib: {
       formats: ['iife'],
       entry: path.resolve(__dirname, 'background', 'index.ts'),
-      name: 'Cat Facts'
+      name: 'Sitecore XM Cloud Extensions'
     },
     rollupOptions: {
       output: {
