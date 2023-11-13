@@ -72,14 +72,17 @@ const App = () => {
   return (
     <ChakraProvider theme={sitecoreTheme} toastOptions={toastOptions}>
       <Box width='md' height={popupHeight.current}>
-        <Box bg='white' shadow='base' overflow='visible' height='14' padding='3' zIndex='3'>
+        <Box bg='white' shadow='base' overflow='visible' height='14' padding='1' zIndex='3'>
           <Flex>
-            <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/740b04f7a7ca404e96d69319fb98f6b0' alt='Sitecore XM Cloud Logo' />
-            <Heading size='xl' marginInlineStart='8px'>Sitecore XM Cloud Extensions</Heading>
+            <Flex padding='2'>
+              <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/740b04f7a7ca404e96d69319fb98f6b0' alt='Sitecore XM Cloud Logo' height='8' />
+              <Heading size='xl' marginInlineStart='8px'>Sitecore XM Cloud Extensions</Heading>
+            </Flex>
             <Spacer />
             <IconButton
               icon={<Icon><path d={mdiInformationOutline} /></Icon>}
               variant='ghost'
+              margin='1'
               aria-label={''}
               onClick={handleInfoButtonClick}
             />
