@@ -166,6 +166,14 @@ const LocalCmUrlForm = () => {
     }
   }, [initialized])
 
+  const statusIconColor = status.connected ? 'success.500' : 'danger.500';
+  const statusIconPath = status.connected ? mdiCheckCircle : mdiCircle;
+  const statusText = status.connected ? (
+    <>
+      Connected to <Link href={status.cmUrl} target='_blank'>{status.cmUrl}</Link>
+    </>
+  ) : 'Disconnected'
+
   const mainActionButton = status.connected ?
     <Button isDisabled={loading} onClick={handleDisconnectButtonClick}>Disconnect</Button> :
     <Button isDisabled={loading} onClick={handleEditButtonClick}>Connect</Button>
@@ -173,7 +181,7 @@ const LocalCmUrlForm = () => {
   const cmUrlInputIsNull = cmUrlInputValue === null
   const cmUrlInputIsEmpty = cmUrlInputIsNull ? false : cmUrlInputValue.trim() === ''
 
-  const content = isEditing ? (
+  const mainContent = isEditing ? (
     <>
       <FormControl isRequired isInvalid={cmUrlInputIsEmpty}>
         <FormLabel>Local CM URL</FormLabel>
@@ -206,10 +214,12 @@ const LocalCmUrlForm = () => {
       <Heading size='sm'>Connect <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/c0ebec446dd1414ab75e5bcdccafc3dc' alt='Sitecore XM Cloud Pages Logo' height='6' display='inline' />Pages to your local XM Cloud instance</Heading>
       <Stack spacing='6'>
         <Box>
-          Status: { status.connected ? `Connected to ${status.cmUrl}` : 'Disconnected' }
+          <Text display='inline' fontWeight='semibold'>Status: </Text>
+          <Icon color={statusIconColor} height='19px'><path d={statusIconPath} /></Icon>
+          <Text display='inline' marginInline='1'>{statusText}</Text>
         </Box>
 
-        {content}
+        {mainContent}
 
         {!!message &&
           <Alert status={message.status}>
