@@ -220,6 +220,17 @@ const LocalCmUrlForm = () => {
     </>
   ) : 'Disconnected'
 
+  const tip = status.connected && (
+    <Box>
+      <Text display='inline' fontWeight='semibold'>Tip: </Text>
+      <Text display='inline' marginInline='1'>If you experience CORS issues, ensure that your main <Text as='kbd'>.env</Text> file and your CM Docker Compose container have these 3 environment variables defined:</Text>
+      <Text as='kbd' display='block'>SITECORE_Pages_Client_Host</Text>
+      <Text as='kbd' display='block'>SITECORE_Pages_CORS_Allowed_Origins</Text>
+      <Text as='kbd' display='block'>SITECORE_GRAPHQL_CORS</Text>
+      <Text>Variable values can be found in the <Link href='https://doc.sitecore.com/xmc/en/developers/xm-cloud/connect-xm-cloud-pages-to-your-local-xm-cloud-instance.html' target='_blank'>Sitecore XM Cloud documentation</Link>.</Text>
+    </Box>
+  )
+
   const mainActionButton = status.connected ?
     <Button isDisabled={loading} onClick={handleDisconnectButtonClick}>Disconnect</Button> :
     <Button isDisabled={loading} onClick={handleEditButtonClick}>Connect</Button>
@@ -230,7 +241,7 @@ const LocalCmUrlForm = () => {
   const mainContent = isEditing ? (
     <>
       <FormControl isRequired isInvalid={!isCmUrlInputValid}>
-        <FormLabel>Local CM URL</FormLabel>
+        <FormLabel>Local Instance CM URL</FormLabel>
         <Input
           value={cmUrlInputValue || ''}
           onChange={handleCmUrlInputChange}
@@ -269,7 +280,7 @@ const LocalCmUrlForm = () => {
           height='6'
           display='inline'
         />{' '}
-        Pages to your local XM Cloud instance
+        Pages to your Local XM Cloud Instance
       </Heading>
       <Stack spacing='6'>
         <Box>
@@ -278,6 +289,7 @@ const LocalCmUrlForm = () => {
           <Text display='inline' marginInline='1'>{statusText}</Text>
         </Box>
 
+        {tip}
         {mainContent}
 
         {!!message &&

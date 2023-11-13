@@ -101,17 +101,20 @@ const App = () => {
                 <Text>
                   This extension is a work in progress with only one feature for the moment.
                 </Text>
-                <Text>
-                  Features:
-                </Text>
-                <UnorderedList marginLeft='6'>
-                  <ListItem>Connecting XM Cloud Pages to your local XM Cloud instance</ListItem>
-                </UnorderedList>
-                <Text>
-                  Author: <Link href='https://twitter.com/jflh' target='_blank'>Jeff L'Heureux</Link>
-                </Text>
+                <Box>
+                  <Text fontWeight='semibold'>
+                    Features:
+                  </Text>
+                  <UnorderedList marginLeft='6'>
+                    <ListItem>Connecting XM Cloud Pages to your local XM Cloud instance</ListItem>
+                  </UnorderedList>
+                </Box>
+                <Box>
+                  <Text display='inline' fontWeight='semibold'>Author: </Text>
+                  <Link href='https://www.jflh.ca/aboutme' target='_blank'>Jeff L'Heureux</Link>
+                </Box>
                 <Wrap>
-                  <Icon as={SiGithub} boxSize='8' color='#181717' _dark={{ color: 'chakra-body-text' }} />
+                  <Icon as={SiGithub} boxSize='6' color='#181717' _dark={{ color: 'chakra-body-text' }} />
                   <Link href='https://github.com/jflheureux/Sitecore-XM-Cloud-Extensions' target='_blank'>Visit the project repository</Link>
                 </Wrap>
               </Stack>
