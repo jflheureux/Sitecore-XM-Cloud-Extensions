@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import sitecoreTheme, { toastOptions } from '@sitecore/blok-theme'
 import {
   Box,
@@ -33,9 +33,26 @@ const App = () => {
   const [initialized, setInitialized] = useState(false)
   const [activeTabIsXMCloudPages, setActiveTabIsXMCloudPages] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const popupHeight = useRef('');
 
   function isSupportedUrl(url) {
-    return url?.startsWith('https://perdu.com')
+    if (!url) {
+      return false
+    }
+
+    return url.startsWith('https://pages.sitecorecloud.io') ||
+           url.startsWith('https://pages.sitecore.io') ||
+           url.startsWith('https://symphony.sitecorecloud.io')
+  }
+
+  function handleInfoButtonClick() {
+    popupHeight.current = 'md'
+    onOpen();
+  }
+
+  function handleInfoSectionClose() {
+    popupHeight.current = ''
+    onClose();
   }
 
   // Initialization - Called when the popup is open
@@ -60,24 +77,27 @@ const App = () => {
 
   return (
     <ChakraProvider theme={sitecoreTheme} toastOptions={toastOptions}>
-      <Box width='md'>
-        <Box bg='white' shadow='base' overflow='visible' height='14' padding='3' zIndex='3'>
+      <Box width='md' height={popupHeight.current}>
+        <Box bg='white' shadow='base' overflow='visible' height='14' padding='1' zIndex='3'>
           <Flex>
-            <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/740b04f7a7ca404e96d69319fb98f6b0' alt='Sitecore XM Cloud Logo' />
-            <Heading size='xl' marginInlineStart='8px'>Sitecore XM Cloud Extensions</Heading>
+            <Flex padding='2'>
+              <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/740b04f7a7ca404e96d69319fb98f6b0' alt='Sitecore XM Cloud Logo' height='8' />
+              <Heading size='xl' marginInlineStart='8px'>Sitecore XM Cloud Extensions</Heading>
+            </Flex>
             <Spacer />
             <IconButton
               icon={<Icon><path d={mdiInformationOutline} /></Icon>}
               variant='ghost'
+              margin='1'
               aria-label={''}
-              onClick={onOpen}
+              onClick={handleInfoButtonClick}
             />
           </Flex>
         </Box>
 
         {initialized && content}
 
-        <Drawer onClose={onClose} isOpen={isOpen} size='sm'>
+        <Drawer onClose={handleInfoSectionClose} isOpen={isOpen} size='sm'>
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
@@ -87,17 +107,20 @@ const App = () => {
                 <Text>
                   This extension is a work in progress with only one feature for the moment.
                 </Text>
-                <Text>
-                  Features:
-                </Text>
-                <UnorderedList marginLeft='6'>
-                  <ListItem>Connecting XM Cloud Pages to your local XM Cloud instance</ListItem>
-                </UnorderedList>
-                <Text>
-                  Author: <Link href='https://twitter.com/jflh' target='_blank'>Jeff L'Heureux</Link>
-                </Text>
+                <Box>
+                  <Text fontWeight='semibold'>
+                    Features:
+                  </Text>
+                  <UnorderedList marginLeft='6'>
+                    <ListItem>Connecting XM Cloud Pages to your local XM Cloud instance</ListItem>
+                  </UnorderedList>
+                </Box>
+                <Box>
+                  <Text display='inline' fontWeight='semibold'>Author: </Text>
+                  <Link href='https://www.jflh.ca/aboutme' target='_blank'>Jeff L'Heureux</Link>
+                </Box>
                 <Wrap>
-                  <Icon as={SiGithub} boxSize='8' color='#181717' _dark={{ color: 'chakra-body-text' }} />
+                  <Icon as={SiGithub} boxSize='6' color='#181717' _dark={{ color: 'chakra-body-text' }} />
                   <Link href='https://github.com/jflheureux/Sitecore-XM-Cloud-Extensions' target='_blank'>Visit the project repository</Link>
                 </Wrap>
               </Stack>
