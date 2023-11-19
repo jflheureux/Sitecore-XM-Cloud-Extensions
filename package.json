@@ -28,7 +28,7 @@
     "bundle:firefox:zip": "web-ext build -s dist\\ -a . && move .\\sitecore_xm_cloud_extensions-%npm_package_version%.zip .\\web-extension-firefox-v%npm_package_version%.xpi",
     "bundle:chrome": "run-s bundle:chrome:*",
     "bundle:chrome:build": "run-s build:chrome",
-    "bundle:chrome:zip": "bestzip .\\web-extension-chrome-v%npm_package_version%.zip .\\dist",
+    "bundle:chrome:zip": "cd .\\dist && bestzip ..\\web-extension-chrome-v%npm_package_version%.zip *",
     "bundle:chrome:crx": "crx pack .\\dist -o .\\web-extension-chrome-v%npm_package_version%.crx",
     "compile": "run-s compile:*",
     "compile:tsc": "tsc",
