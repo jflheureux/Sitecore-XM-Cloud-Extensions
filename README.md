@@ -1,14 +1,14 @@
-# Sitecore XM Cloud Extensions
+# ![Sitecore XM Cloud Extensions logo](/public/icon-72x72.png) Sitecore XM Cloud Extensions
 
 Sitecore XM Cloud Extensions is a browser extension that improves Sitecore XM Cloud user experience.
 
 It is a work in progress with only one feature for the moment.
 
-## Features
+## ⚙️ Features
 
 - Connecting XM Cloud Pages to your local XM Cloud instance
 
-## Download
+## ⬇️ Download
 
 Download the extension on the marketplaces:
 
@@ -16,15 +16,15 @@ Download the extension on the marketplaces:
 
 Support for other browsers will be added in the future.
 
-## Author
+## 🧑 Author
 
 [Jeff L'Heureux](https://www.jflh.ca/aboutme)
 
-## Contributions
+## ✍️ Contributions
 
 Questions, suggestions and contributions are welcome in the form of GitHub issues and pull requests. Please sync with the author before starting any feature in case they already started a similar feature.
 
-## Development
+## ⌨️ Development
 
 The NPM scripts are adapted to work on Windows.
 
@@ -88,7 +88,7 @@ Run e2e tests:
 npm run test:e2e
 ```
 
-## Files
+### Files
 
 - background\background.ts - Background script/Service worker
 - popup\index.html - popup UI
