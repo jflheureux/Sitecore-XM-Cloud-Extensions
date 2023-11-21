@@ -12,10 +12,9 @@ It is a work in progress with only one feature for the moment.
 
 Download the extension on the marketplaces:
 
-- Chrome:
-- Firefox:
-- Edge:
-- Safari:
+- Chrome: [https://chromewebstore.google.com/detail/sitecore-xm-cloud-extensi/pkonhbljhhbhbdjkacgmafheaebijmjh](https://chromewebstore.google.com/detail/sitecore-xm-cloud-extensi/pkonhbljhhbhbdjkacgmafheaebijmjh)
+
+Support for other browsers will be added in the future.
 
 ## Author
 
