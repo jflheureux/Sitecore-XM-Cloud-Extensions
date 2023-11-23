@@ -23,13 +23,11 @@ const Settings = () => {
         // Load extension settings
 
         if (chrome?.storage) {
-            chrome.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {
-                alert("chrome: "+result.datasourceEnabled);
+            chrome.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {                
                 setDatasourceEnabled(result.datasourceEnabled ?? true);
             });
         } else if (browser?.storage) {
-            browser.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {
-                alert("browser: "+result.datasourceEnabled);
+            browser.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {                
                 setDatasourceEnabled(result.datasourceEnabled ?? true);
             });
         }
