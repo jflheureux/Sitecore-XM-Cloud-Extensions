@@ -1,0 +1,22 @@
+.xmcloud-extension-link {
+    
+    color: #18181b;
+}
+
+.xmcloud-extension-links {
+    text-decoration: none;
+    margin-right:10px;
+}
+
+.xmcloud-extension-links a {
+    text-decoration: underline; /* Add underline to links */
+}
+
+
+.node:hover{
+    text-decoration: unset !important;
+}
+
+.node:hover > :not(.xmcloud-extension-links){
+    text-decoration: underline !important;
+}

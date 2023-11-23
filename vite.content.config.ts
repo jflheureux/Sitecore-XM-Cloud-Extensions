@@ -12,7 +12,7 @@ export default defineConfig({
     outDir: path.resolve(__dirname, 'dist'),
     lib: {
       formats: ['iife'],
-      entry: path.resolve(__dirname, 'content-script', 'index.tsx'),
+      entry: path.resolve(__dirname, 'content-script', 'index.ts'),
       name: 'Sitecore XM Cloud Extensions'
     },
     rollupOptions: {
