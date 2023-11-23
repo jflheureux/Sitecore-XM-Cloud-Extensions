@@ -5,6 +5,24 @@
   "description": "Browser extension that improves Sitecore XM Cloud user experience.",
   "homepage_url": "https://github.com/jflheureux/Sitecore-XM-Cloud-Extensions",
   "version": "1.0.0",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://pages.sitecorecloud.io/*",
+        "https://pages.sitecore.io/*",
+        "https://symphony.sitecorecloud.io/*"
+      ],
+      "run_at": "document_idle",
+      "js": ["./contentScript/index.js"],
+      "css": ["./content/style.css"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "sitecore_xm_cloud_extensions@outlook.com"
+    }
+  },
+  
   "background": {
     "page": "./background/index.html",
     "persistent": false
@@ -17,6 +35,7 @@
   },
   "permissions": [
     "scripting",
+    "storage",
     "https://pages.sitecorecloud.io/*",
     "https://pages.sitecore.io/*",
     "https://symphony.sitecorecloud.io/*"
