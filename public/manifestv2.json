@@ -17,6 +17,12 @@
       "css": ["./content/style.css"]
     }
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "sitecore_xm_cloud_extensions@outlook.com"
+    }
+  },
+  
   "background": {
     "page": "./background/index.html",
     "persistent": false

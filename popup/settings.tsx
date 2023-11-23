@@ -1,4 +1,5 @@
 declare const chrome: any;
+declare const browser: any;
 
 import {
     Box,
@@ -20,16 +21,31 @@ const Settings = () => {
 
     useEffect(() => {
         // Load extension settings
-        chrome.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {
-            setDatasourceEnabled(result.datasourceEnabled ?? true);
-        });
+
+        if (chrome?.storage) {
+            chrome.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {
+                alert("chrome: "+result.datasourceEnabled);
+                setDatasourceEnabled(result.datasourceEnabled ?? true);
+            });
+        } else if (browser?.storage) {
+            browser.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {
+                alert("browser: "+result.datasourceEnabled);
+                setDatasourceEnabled(result.datasourceEnabled ?? true);
+            });
+        }
     }, []);
 
     const handleSwitchChange = () => {
         // Update extension settings when the switch is toggled
         const newDatasourceState = !datasourceEnabled;
         setDatasourceEnabled(newDatasourceState);
-        chrome.storage.sync.set({ datasourceEnabled: newDatasourceState });
+
+        if (chrome?.storage) {
+            chrome.storage.sync.set({ datasourceEnabled: newDatasourceState });
+        }
+        else if (browser?.storage) {
+            browser.storage.sync.set({ datasourceEnabled: newDatasourceState });
+        }
     };
 
     return (
