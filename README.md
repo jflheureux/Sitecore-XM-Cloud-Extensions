@@ -7,6 +7,7 @@ It is a work in progress with only one feature for the moment.
 ## ⚙️ Features
 
 - Connecting XM Cloud Pages to your local XM Cloud instance
+- Opening Explorer / Content Editor from 'Assign content item' dialog
 
 ## ⬇️ Download
 

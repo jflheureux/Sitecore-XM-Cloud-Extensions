@@ -25,9 +25,10 @@ import {
 } from '@chakra-ui/react'
 import UnsupportedUrl from './unsupportedUrl'
 import { getActiveBrowserTab } from './browserUtils'
-import { mdiInformationOutline } from '@mdi/js'
+import { mdiInformationOutline, mdiCogOutline } from '@mdi/js'
 import { SiGithub } from '@icons-pack/react-simple-icons'
 import LocalCmUrlForm from './localCmUrlForm'
+import Settings from './settings'
 
 const App = () => {
   const [initialized, setInitialized] = useState(false)
@@ -41,8 +42,8 @@ const App = () => {
     }
 
     return url.startsWith('https://pages.sitecorecloud.io') ||
-           url.startsWith('https://pages.sitecore.io') ||
-           url.startsWith('https://symphony.sitecorecloud.io')
+      url.startsWith('https://pages.sitecore.io') ||
+      url.startsWith('https://symphony.sitecorecloud.io')
   }
 
   function handleInfoButtonClick() {
@@ -51,6 +52,16 @@ const App = () => {
   }
 
   function handleInfoSectionClose() {
+    popupHeight.current = ''
+    onClose();
+  }
+
+  function handleSettingsButtonClick() {
+    popupHeight.current = 'md'
+    onOpen();
+  }
+
+  function handleSettingsSectionClose() {
     popupHeight.current = ''
     onClose();
   }
@@ -78,7 +89,7 @@ const App = () => {
   return (
     <ChakraProvider theme={sitecoreTheme} toastOptions={toastOptions}>
       <Box width='md' height={popupHeight.current}>
-        <Box bg='white' shadow='base' overflow='visible' height='14' padding='1' zIndex='3'>
+        <Box bg='white' shadow='base' overflow='visible' height='14' padding='1' zIndex='3' >
           <Flex>
             <Flex padding='2'>
               <Image src='https://sitecorecontenthub.stylelabs.cloud/api/public/content/740b04f7a7ca404e96d69319fb98f6b0' alt='Sitecore XM Cloud Logo' height='8' />
@@ -127,6 +138,30 @@ const App = () => {
             </DrawerBody>
           </DrawerContent>
         </Drawer>
+
+        <Drawer onClose={handleSettingsSectionClose} isOpen={isOpen} size='sm'>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>XM Cloud Extension Settings</DrawerHeader>
+            <DrawerBody>
+              <Settings />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+
+        <Box bg='white' shadow='base' overflow='visible' height='14' padding='1' zIndex='3' >
+          <Flex>
+            <Spacer />
+            <IconButton
+              icon={<Icon><path d={mdiCogOutline} /></Icon>}
+              variant='ghost'
+              margin='1'
+              aria-label={''}
+              onClick={handleSettingsButtonClick}
+            />
+          </Flex>
+        </Box>
       </Box>
     </ChakraProvider>
   )

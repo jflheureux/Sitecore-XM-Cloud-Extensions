@@ -31,7 +31,8 @@
     }
   },
   "permissions": [
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "host_permissions": [
     "https://pages.sitecorecloud.io/*",

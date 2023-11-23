@@ -29,6 +29,7 @@
   },
   "permissions": [
     "scripting",
+    "storage",
     "https://pages.sitecorecloud.io/*",
     "https://pages.sitecore.io/*",
     "https://symphony.sitecorecloud.io/*"
