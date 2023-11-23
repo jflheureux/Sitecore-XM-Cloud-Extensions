@@ -47,30 +47,36 @@ const createLinkElement = (url: string, text: string): HTMLAnchorElement => {
 };
 
 const observeDomChanges = () => {
-  const observer = new MutationObserver(() => {
-    console.log('DOM changed from extension');
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((addedNode) => {
+        if (addedNode instanceof HTMLElement && addedNode.closest('app-datasource-picker')) {
+          console.log('DOM changed from extension within app-datasource-picker');
 
-    const elementsWithDataItemId = document.querySelectorAll('[data-itemid]') as NodeListOf<HTMLElement>;
+          const elementsWithDataItemId = addedNode.querySelectorAll('[data-itemid]') as NodeListOf<HTMLElement>;
 
-    elementsWithDataItemId.forEach((element: HTMLElement) => {
-      const itemId = element.getAttribute('data-itemid');
-      const existingLinkSpan = element.querySelector('.xmcloud-extension-links');
+          elementsWithDataItemId.forEach((element: HTMLElement) => {
+            const itemId = element.getAttribute('data-itemid');
+            const existingLinkSpan = element.querySelector('.xmcloud-extension-links');
 
-      if (!existingLinkSpan && itemId) {
-        const queryParams: QueryParams = {
-          organization: getQueryParam('organization'),
-          tenantName: getQueryParam('tenantName'),
-          scLang: getQueryParam('sc_lang'),
-          scSite: getQueryParam('sc_site'),
-          scItemId: itemId,
-        };
+            if (!existingLinkSpan && itemId) {
+              const queryParams: QueryParams = {
+                organization: getQueryParam('organization'),
+                tenantName: getQueryParam('tenantName'),
+                scLang: getQueryParam('sc_lang'),
+                scSite: getQueryParam('sc_site'),
+                scItemId: itemId,
+              };
 
-        const explorerUrl = constructExplorerUrl(queryParams);
-        const contentEditorUrl = constructContentEditorUrl(queryParams);
+              const explorerUrl = constructExplorerUrl(queryParams);
+              const contentEditorUrl = constructContentEditorUrl(queryParams);
 
-        const linkSpan = createLinkSpan(explorerUrl, contentEditorUrl);
-        element.appendChild(linkSpan);
-      }
+              const linkSpan = createLinkSpan(explorerUrl, contentEditorUrl);
+              element.appendChild(linkSpan);
+            }
+          });
+        }
+      });
     });
   });
 
