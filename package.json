@@ -34,6 +34,7 @@
     "compile:tsc": "tsc",
     "compile:vite": "run-p compile:vite:*",
     "compile:vite:web": "vite build",
+    "compile:vite:js": "vite build --config vite.content.config.ts",
     "preview": "vite preview",
     "start": "run-s start:chrome",
     "start:chrome": "run-p start:chrome:*",
