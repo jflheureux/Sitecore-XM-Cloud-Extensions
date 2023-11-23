@@ -2,9 +2,11 @@ declare const chrome: any;
 
 import {
     Box,
+    Flex,
     FormControl,
     FormLabel,
     SimpleGrid,
+    Spacer,
     Stack,
     Switch,
     Text,
@@ -17,7 +19,7 @@ const Settings = () => {
     const [datasourceEnabled, setDatasourceEnabled] = useState(true);
 
     useEffect(() => {
-        // Load extension settings on component mount
+        // Load extension settings
         chrome.storage.sync.get('datasourceEnabled', (result: { datasourceEnabled?: boolean }) => {
             setDatasourceEnabled(result.datasourceEnabled ?? true);
         });
@@ -43,26 +45,28 @@ const Settings = () => {
                 </Text>
             </Box>
 
-            {/* Datasource Viewer Setting */}
+            {/* Feature list */}
             <Box>
-                <FormControl as={SimpleGrid} columns={{ base: 2, lg: 4 }}>
-                    <FormLabel htmlFor='datasourceSwitch'>
+                <FormControl as={SimpleGrid}>
+                    <Flex>
                         <Tooltip
                             label="Displays direct Explorer/Content Editor link for data source items in the 'Assign Content Item' dialog">
-                            Enable Datasource Viewer:
+                            <FormLabel htmlFor='datasourceSwitch'>
+                                Enable Datasource Viewer:
+                            </FormLabel>
                         </Tooltip>
-                    </FormLabel>
-                    <Switch
-                        id='datasourceSwitch'
-                        isChecked={datasourceEnabled}
-                        onChange={handleSwitchChange}
-                    />
-                </FormControl>
-            </Box>
+                        <Spacer />
+                        <Switch
+                            id='datasourceSwitch'
+                            isChecked={datasourceEnabled}
+                            onChange={handleSwitchChange}
+                        />
 
-            {/* Additional settings or components can be added here */}
+                    </Flex>
+                </FormControl>
+                {/* Additional feature switches can be added here */}
+            </Box>
             <Wrap>
-                {/* Additional settings or components can be added here */}
             </Wrap>
         </Stack>
     );

@@ -59,7 +59,7 @@ const datasourceViewer = () => {
         mutations.forEach((mutation) => {
           mutation.addedNodes.forEach((addedNode) => {
             if (addedNode instanceof HTMLElement && addedNode.closest('app-datasource-picker')) {
-              console.log('DOM changed from extension within app-datasource-picker');
+              console.debug('DOM changed from extension within app-datasource-picker');
 
               const elementsWithDataItemId = addedNode.querySelectorAll('[data-itemid]') as NodeListOf<HTMLElement>;
 
@@ -79,7 +79,7 @@ const datasourceViewer = () => {
                   const explorerUrl = constructExplorerUrl(queryParams);
                   const contentEditorUrl = constructContentEditorUrl(queryParams);
                   const linkSpan = createLinkSpan(explorerUrl, contentEditorUrl);
-                  
+
                   element.appendChild(linkSpan);
                 }
               });
